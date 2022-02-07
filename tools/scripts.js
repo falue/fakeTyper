@@ -23,7 +23,7 @@ async function startup() {
         var file = this.files[0];
 
         if (file) {
-            var reader = new FileReader();                    
+            var reader = new FileReader();
             reader.onload = function (evt) {
                 console.log(evt);
                 cursor = 0;
@@ -48,7 +48,6 @@ async function startup() {
 
     // Setup pre-entered text on load
     if(startChar > 0) {
-        /* if((byRows && cursor >= text.split("\n").length) */
         if(byRows) {
             if(startChar < text.split("\n").length) {
                 cursor = startChar;
