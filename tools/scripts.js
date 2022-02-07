@@ -194,7 +194,10 @@ function setUpUrlParams() {
 
                 case "startChar":
                     if(value > 0) {
+                        // I dont know why i subtracted speed from value.
+                        // to start with 1 char, it is not working
                         startChar = value-speed;
+                        startChar = startChar == 0 ? 1 : startChar;
                         document.getElementById('startChar').value = startChar;
                     }
                 break;
