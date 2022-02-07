@@ -296,16 +296,16 @@ function getNewPosition(event, id) {
             
         case 13:
             console.log("enter");
-            /* console.log(!autoType); */
-            /* // toggle
-            toggleAutoplay(!autoType); */
+            /* to toggle: toggleAutoplay(!autoType); */
             if(!autoType) {
+                // If enter is pressed, start autoplay
                 toggleAutoplay(true);
             } else {
+                // If enter pressed again, reload entire site
                 window.location.href = window.location.href
             }
 
-            // BR does not work because whole text gets replaced again
+            // Adding BR does not work because whole text gets replaced again
             // document.getElementById("terminal").innerHTML += "br";
             break;
             
@@ -327,22 +327,19 @@ function getNewPosition(event, id) {
     // do not set cursor before 0
     cursor = cursor < 0 ? 0 : cursor;
 
-    // LOOP
-    // dublicate text if end reached
-    /* console.log(text.split("\n").length, cursor); */
+    // END REACHED - LOOP TEXT
     if((byRows && cursor >= text.split("\n").length)
         ||
         (!byRows && cursor >= text.length)
     ) {
         if(multipleTexts.length > 1) {
-            // load next or first
-            console.log("Loop point end reached");
+            // Load next or first text
             let currentTextIndex = multipleTexts.indexOf(currentText);
             let nextIndexOfText;
 
             if(repeatMultipleTexts === "repeat" || repeatMultipleTexts === "stopAtEnd") {
                 if(repeatMultipleTexts === "stopAtEnd" && currentTextIndex+1 >= multipleTexts.length) {
-                    // End after last text if STOP
+                    // Disable interaction after last text is reached
                     baseText = "";
                 } else {
                     // Repeat all text indefinitely
@@ -360,11 +357,8 @@ function getNewPosition(event, id) {
         }
 
         // Add new text to current text
-        /* text += baseText; */
         text += baseText;
     }
-    //cursor = cursor > text.length ? text.length : cursor;
-    // console.log(cursor);
 }
 
 function changeSpeed(value) {
