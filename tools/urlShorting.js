@@ -16,6 +16,7 @@ function shortenUrl() {
                   .replace("byRows", "r")
                   .replace("startChar", "sc")
                   .replace("paddingRange", "p")
+                  .replace("repeatMultipleTexts", "rt")
                   .replace("=true", "=t")
                   .replace("=false", "=f");
     let hasLocalFileLoaded = document.getElementById('filetoRead').value.length > 0;
@@ -44,6 +45,7 @@ function expandUrl(currentUrl) {
                   .replace("&r=", "&byRows=")
                   .replace("&sc=", "&startChar=")
                   .replace("&p=", "&paddingRange=")
+                  .replace("&rt=", "&repeatMultipleTexts=")
                   .replace("=t", "=true")
                   .replace("=f", "=false");
     return currentUrl;

@@ -1,6 +1,8 @@
 let text = "All work and no play makes Jack a dull boy.";
 let currentText = "shining";
 let baseText = text;
+let multipleTexts = [];
+let repeatMultipleTexts = "repeat";
 let cursor = 0;
 let speed = 1;
 var humanTyper = false;
@@ -74,6 +76,7 @@ function setUpUrlParams() {
     /* 
     allowed values:
         text:       name of file without .txt - make sure to define files in readTexts.js!
+                    could be a single filename, or multiple pipe (|) seperated values to be typed in order.
         theme:      an-old-hope
                     default
                     dracula
@@ -99,7 +102,13 @@ function setUpUrlParams() {
         paddingRange: 40-400, padding bottom of terminal
         startChar:    >=0 displays already entered text on load
         byRows:       true or false, instead of char by char, every typing enters an entire row
-    */
+        repeatMultipleTexts
+                      If multiple texts are defined with text, decide what should happen if
+                      the end of all texts together are reached:
+                        - "repeat": start with first text again
+                        - "stopAtEnd": Do not loop after last text and disable further input
+                        - "loopLast": Repeat the last text indefinitely
+*/
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -122,7 +131,9 @@ function setUpUrlParams() {
                     if(value == "ownText") {
                         alert("You've entered or edited the text online. the text is lost now. Sorry.");
                     } else {
-                        loadText(value);
+                        multipleTexts = value.split("|");
+                        /* console.log(multipleTexts); */
+                        loadText(multipleTexts[0]);
                     }
                 break;
 
@@ -198,6 +209,10 @@ function setUpUrlParams() {
                 case "paddingRange":
                     document.getElementById('paddingRange').value=value;
                     changePadding(value);
+                break;
+
+                case "repeatMultipleTexts":
+                    repeatMultipleTexts = value;
                 break;
             }
         }
@@ -300,13 +315,41 @@ function getNewPosition(event, id) {
     // do not set cursor before 0
     cursor = cursor < 0 ? 0 : cursor;
 
+    // LOOP
     // dublicate text if end reached
     /* console.log(text.split("\n").length, cursor); */
     if((byRows && cursor >= text.split("\n").length)
         ||
         (!byRows && cursor >= text.length)
     ) {
-        text += "\n" + baseText;
+        if(multipleTexts.length > 1) {
+            // load next or first
+            console.log("Loop point end reached");
+            let currentTextIndex = multipleTexts.indexOf(currentText);
+            let nextIndexOfText;
+
+            if(repeatMultipleTexts === "repeat" || repeatMultipleTexts === "stopAtEnd") {
+                if(repeatMultipleTexts === "stopAtEnd" && currentTextIndex+1 >= multipleTexts.length) {
+                    // End after last text if STOP
+                    baseText = "";
+                } else {
+                    // Repeat all text indefinitely
+                    nextIndexOfText = currentTextIndex+1 >= multipleTexts.length ? 0 : currentTextIndex+1;
+                    currentText = multipleTexts[nextIndexOfText];
+                    baseText = "\n" + texts[multipleTexts[nextIndexOfText]];
+                }
+
+            } else if (repeatMultipleTexts === "loopLast") {
+                // Repeat the last text element indefinitely
+                nextIndexOfText = multipleTexts.length-1;
+                currentText = multipleTexts[nextIndexOfText];
+                baseText = "\n" + texts[multipleTexts[nextIndexOfText]];
+            }
+        }
+
+        // Add new text to current text
+        /* text += baseText; */
+        text += baseText;
     }
     //cursor = cursor > text.length ? text.length : cursor;
     // console.log(cursor);
@@ -437,7 +480,7 @@ function buildUrlFromCurrentSettings() {
     /* let url = window.location.host + window.location.pathname; */
     let url = window.location.pathname;
     let params = new Array();
-    params.push("text=" + currentText);
+    params.push("text=" + multipleTexts.join("|"));
     params.push("theme=" + document.getElementById('themeSelect').value);
     params.push("speed=" + speed);
     params.push("language=" + getSelectedLanguage());
@@ -450,6 +493,7 @@ function buildUrlFromCurrentSettings() {
     params.push("byRows=" + document.getElementById('byRows').checked);
     params.push("startChar=" + document.getElementById('startChar').value);
     params.push("paddingRange=" + document.getElementById('paddingRange').value);
+    params.push("repeatMultipleTexts=" + repeatMultipleTexts);
     let completeUrl = url + "?" + params.join("&");
     /* console.log(completeUrl); */
     return completeUrl;
