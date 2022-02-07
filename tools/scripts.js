@@ -293,12 +293,21 @@ function getNewPosition(event, id) {
             console.log("backspace");
             cursor -= speed;
             break; 
-        
-        /* case 13:
+            
+        case 13:
             console.log("enter");
-            // does not work because whole text gets replaced again
-            document.getElementById("terminal").innerHTML += "br";
-            break; */
+            /* console.log(!autoType); */
+            /* // toggle
+            toggleAutoplay(!autoType); */
+            if(!autoType) {
+                toggleAutoplay(true);
+            } else {
+                window.location.href = window.location.href
+            }
+
+            // BR does not work because whole text gets replaced again
+            // document.getElementById("terminal").innerHTML += "br";
+            break;
             
         case 27:
             console.log("esc");
@@ -427,6 +436,7 @@ function toggleAutoplay(value) {
     } else {
         /* console.log("stop autoplay"); */
         clearTimeout(autoType);
+        autoType = undefined;
     }
 }
 
