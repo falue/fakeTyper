@@ -17,7 +17,7 @@ async function readFilesToVariables() {
         language = !language ? "none" : language;
         language = language !== "none" ? "language-"+language : language;
 
-        await parseFile("../text/"+file+".txt", false).then((response) => {
+        await parseFile("text/"+file+".txt", false).then((response) => {
             texts[file] = response;
             // Fill menu
             let a = document.createElement("a");
